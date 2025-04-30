@@ -82,7 +82,6 @@ show_logo() {
     echo -e "${CYAN}${BOLD}     Mihomo (Clash.Meta) 内核自动更新脚本 v$VERSION     ${NC}"
     echo -e "${YELLOW}作者:   https://github.com/MetaCubeX${NC}"
     echo -e "${YELLOW}脚本:   https://github.com/maxage/openclash${NC}"
-    echo -e "${YELLOW}在线运行: curl -sL https://raw.githubusercontent.com/maxage/openclash/main/update_mihome.sh | sh${NC}"
     print_divider
 }
 
@@ -322,7 +321,6 @@ download_and_install() {
     echo -e "${GREEN}🎉 Mihomo (Clash.Meta) 内核更新完成！${NC}"
     print_divider
     echo -e "${GREEN}感谢使用 Mihomo (Clash.Meta) 内核自动更新脚本！${NC}"
-    echo -e "${YELLOW}在线运行脚本: curl -sL https://raw.githubusercontent.com/maxage/openclash/main/update_mihome.sh | sh${NC}"
 }
 
 # 检测系统和架构
@@ -486,8 +484,7 @@ main() {
             echo -ne "${MENU_CHOICE_COLOR}按任意键返回主菜单...${NC}"
             read -r
             # 在在线运行模式下，返回主菜单不适用，直接退出脚本
-            echo -e "${YELLOW}请重新运行脚本以返回主菜单:${NC}"
-            echo -e "${CYAN}curl -sL https://raw.githubusercontent.com/maxage/openclash/main/update_mihome.sh | sh${NC}"
+            echo -e "${YELLOW}请重新运行脚本以返回主菜单${NC}"
             exit 0
             ;;
             
@@ -518,14 +515,12 @@ main() {
                 print_success "Token已保存"
             fi
             
-            echo -e "${YELLOW}设置已完成，请重新运行脚本:${NC}"
-            echo -e "${CYAN}curl -sL https://raw.githubusercontent.com/maxage/openclash/main/update_mihome.sh | sh${NC}"
+            echo -e "${YELLOW}设置已完成，请重新运行脚本${NC}"
             exit 0
             ;;
             
         4)
             echo -e "${YELLOW}👋 已选择退出，欢迎下次使用！${NC}"
-            echo -e "${CYAN}curl -sL https://raw.githubusercontent.com/maxage/openclash/main/update_mihome.sh | sh${NC}"
             exit 0
             ;;
             
