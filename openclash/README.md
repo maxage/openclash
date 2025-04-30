@@ -90,6 +90,6 @@ chmod +x update_mihome.sh
 - Mihomo (Clash.Meta)：https://github.com/MetaCubeX
 - 脚本维护：https://github.com/maxage/openclash
 
-## 许可证
+## 许可证 
 
 MIT 
