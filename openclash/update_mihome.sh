@@ -2,6 +2,7 @@
 # 推荐在 OpenWrt 下用 ash 运行
 # 在线运行命令: curl -sL https://raw.githubusercontent.com/maxage/openclash/main/update_mihome.sh | sh
 
+
 # 颜色变量
 RED='\033[0;31m'
 GREEN='\033[0;32m'
