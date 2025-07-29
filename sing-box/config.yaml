@@ -1,0 +1,180 @@
+{
+  // 日志设置
+  "log": {
+    // "disabled": true 表示完全关闭日志记录，这是保护隐私的最佳实践。
+    "disabled": true
+  },
+
+  // 入站连接配置：定义服务器如何接收来自客户端的连接。
+  "inbounds": [
+    // --- 节点 1: VLESS 直连 ---
+    {
+      "type": "vless", // 协议类型为 VLESS
+      "tag": "vless-in-01", // 此入站的唯一标识符，用于路由规则
+      "listen": "::", // 监听所有 IPv4 和 IPv6 地址
+      "listen_port": 60000, // 监听的端口号
+      "tcp_fast_open": true, // 开启 TCP Fast Open 以降低延迟
+      "tcp_multi_path": true, // 开启 TCP MultiPath 以提升连接稳定性
+      "udp_timeout": "5m", // UDP 会话超时时间
+      "users": [
+        {
+          "name": "美国｜三线｜Vless", // 节点在客户端显示的名称
+          "uuid": "YOUR_UUID_HERE", // VLESS 协议的用户 ID
+          "flow": "xtls-rprx-vision" // VLESS 的流控模式，用于提升性能
+        }
+      ],
+      "tls": {
+        "enabled": true, // 开启 TLS 加密
+        "server_name": "swcdn.apple.com", // SNI (服务器名称指示)，伪装成访问苹果的域名
+        "reality": {
+          "enabled": true, // 开启 REALITY，目前最有效的伪装技术
+          "handshake": {
+            "server": "swcdn.apple.com", // REALITY 握手时真正模仿访问的目标服务器
+            "server_port": 443 // 目标服务器的标准 TLS 端口
+          },
+          // 这是您用 "sing-box generate reality-keypair" 生成的私钥
+          "private_key": "YOUR_PRIVATE_KEY_1",
+          // short_id 是公钥的指纹，用于快速匹配
+          "short_id": [
+            "YOUR_SHORT_ID_1"
+          ],
+          "max_time_difference": "1m" // 允许客户端与服务器的最大时间差
+        }
+      }
+    },
+    // --- 节点 2: VLESS 走 SOCKS5 家宽落地 ---
+    {
+      "type": "vless",
+      "tag": "vless-in-02",
+      "listen": "::",
+      "listen_port": 60001,
+      "tcp_fast_open": true,
+      "tcp_multi_path": true,
+      "udp_timeout": "5m",
+      "users": [
+        {
+          "name": "美国｜三线｜Vless｜家宽",
+          "uuid": "YOUR_UUID_HERE"
+          // 注意：此节点没有 "flow" 参数，因为它与 SOCKS5 出口不兼容
+        }
+      ],
+      "tls": {
+        "enabled": true,
+        "server_name": "swcdn.apple.com", // 同样伪装成访问苹果
+        "reality": {
+          "enabled": true,
+          "handshake": {
+            "server": "swcdn.apple.com",
+            "server_port": 443
+          },
+          // 这是您为第二个节点生成的私钥
+          "private_key": "YOUR_PRIVATE_KEY_2",
+          "short_id": [
+            "YOUR_SHORT_ID_2"
+          ],
+          "max_time_difference": "1m"
+        }
+      }
+    },
+    // --- 节点 3: Hysteria2 直连 ---
+    {
+      "type": "hysteria2", // 协议类型为 Hysteria2，特点是暴力发包，速度快
+      "tag": "hy2-in-01",
+      "listen": "::",
+      "listen_port": 60002,
+      "tcp_fast_open": true,
+      "tcp_multi_path": true,
+      "udp_timeout": "5m",
+      "users": [
+        {
+          "name": "美国｜三线｜Hy2",
+          "password": "YOUR_HYSTERIA2_PASSWORD" // Hysteria2 的认证密码
+        }
+      ],
+      "ignore_client_bandwidth": false, // 不忽略客户端设置的带宽
+      "tls": {
+        "enabled": true,
+        // SNI 必须与您证书绑定的域名一致
+        "server_name": "your.domain.com",
+        // 您申请的 SSL 证书的路径
+        "certificate_path": "/etc/sing-box/cert.pem",
+        "key_path": "/etc/sing-box/key.pem"
+      }
+    },
+    // --- 节点 4: Hysteria2 走 SOCKS5 家宽落地 ---
+    {
+      "type": "hysteria2",
+      "tag": "hy2-in-02",
+      "listen": "::",
+      "listen_port": 60003,
+      "tcp_fast_open": true,
+      "tcp_multi_path": true,
+      "udp_timeout": "5m",
+      "users": [
+        {
+          "name": "美国｜三线｜Hy2｜家宽",
+          "password": "YOUR_HYSTERIA2_PASSWORD"
+        }
+      ],
+      "ignore_client_bandwidth": false,
+      "tls": {
+        "enabled": true,
+        "server_name": "your.domain.com",
+        "certificate_path": "/etc/sing-box/cert.pem",
+        "key_path": "/etc/sing-box/key.pem"
+      }
+    }
+  ],
+
+  // 出站连接配置：定义服务器如何将流量发送出去。
+  "outbounds": [
+    {
+      "type": "direct", // 直接连接类型
+      "tag": "direct"   // 此出站的唯一标识符，表示从本机直接发出
+    },
+    {
+      "type": "socks", // SOCKS5 代理类型
+      "tag": "socks-out", // 此出站的唯一标识符，表示通过 SOCKS5 代理发出
+      "server": "YOUR_SOCKS5_IP_HERE", // SOCKS5 代理服务器的 IP 地址
+      "server_port": 6464, // SOCKS5 代理服务器的端口
+      "version": "5", // SOCKS 协议版本
+      "username": "YOUR_SOCKS5_USERNAME", // SOCKS5 代理的用户名
+      "password": "YOUR_SOCKS5_PASSWORD" // SOCKS5 代理的密码
+    }
+  ],
+
+  // 路由规则配置：决定了来自不同入站的流量应该走哪个出站。
+  "route": {
+    "rules": [
+      {
+        // 开启流量嗅探，用于识别流量的应用层协议（如 HTTP, TLS）
+        "action": "sniff"
+      },
+      {
+        // 劫持所有 DNS 请求，交由 sing-box 处理，防止 DNS 泄露
+        "protocol": "dns",
+        "action": "hijack-dns"
+      },
+      {
+        // 规则一：直连规则
+        // 当流量来自 "vless-in-01" 或 "hy2-in-01" 这两个入站时...
+        "inbound": [
+          "vless-in-01",
+          "hy2-in-01"
+        ],
+        "action": "route", // 执行路由操作
+        "outbound": "direct" // ...将流量从 "direct" 出站（即本机）发送出去。
+      },
+      {
+        // 规则二：代理链规则
+        // 当流量来自 "vless-in-02" 或 "hy2-in-02" 这两个入站时...
+        "inbound": [
+          "vless-in-02",
+          "hy2-in-02"
+        ],
+        "action": "route", // 执行路由操作
+        "outbound": "socks-out" // ...将流量从 "socks-out" 出站（即通过 SOCKS5 代理）发送出去。
+      }
+    ]
+  }
+}
