@@ -1,0 +1,6 @@
+# link.com 支付规则
+# Rule count: 2
+# Last updated: 2025-09-04T03:18:59.000Z
+payload:
+  - DOMAIN-SUFFIX,link.com
+  - DOMAIN-SUFFIX,link.co
