@@ -17,6 +17,7 @@ payload:
   - DOMAIN-KEYWORD,browser-intake-datadoghq.com
   - DOMAIN-KEYWORD,cdn.usefathom.com
   - DOMAIN-KEYWORD,chat.openai.com.cdn.cloudflare.net
+  - DOMAIN-KEYWORD,codebuddy.ai
   - DOMAIN-KEYWORD,copilot-proxy.githubusercontent.com
   - DOMAIN-KEYWORD,copilot.microsoft.com
   - DOMAIN-KEYWORD,gateway.ai.cloudflare.com
