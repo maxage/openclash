@@ -114,6 +114,7 @@ payload:
   - DOMAIN-SUFFIX,intercomcdn.com
   - DOMAIN-SUFFIX,invoice.stripe.com
   - DOMAIN-SUFFIX,jasper.ai
+  - DOMAIN-SUFFIX,kiro.dev
   - DOMAIN-SUFFIX,klingai.com
   - DOMAIN-SUFFIX,labs.google
   - DOMAIN-SUFFIX,launchdarkly.com
